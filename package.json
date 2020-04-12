@@ -1,20 +1,28 @@
 {
   "name": "sahtml-query",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.1.0",
+  "main": "lib/index.js",
+  "typings": "./lib/index",
+  "types": "./lib/index",
   "repository": "https://github.com/mdevils/sahtml-query",
   "author": "Marat Dulin",
   "license": "MIT",
   "scripts": {
-    "test": "mocha --recursive test",
-    "test-watch": "mocha -w --recursive test"
+    "test": "mocha --recursive -r ts-node/register test/**.ts test/**/*.ts",
+    "test-watch": "mocha -w --recursive -r ts-node/register test/**.ts test/**/*.ts",
+    "build": "tsc",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "css-selector-parser": "^1.3.0",
-    "sahtml": "^1.0.4"
+    "css-selector-parser": "^1.4.1",
+    "sahtml": "^1.1.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
     "chai": "^4.2.0",
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.1",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
   }
 }

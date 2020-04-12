@@ -1,5 +1,5 @@
-const {expect} = require('chai');
-const {parse} = require('..');
+import {expect} from 'chai';
+import {parse} from '../src';
 
 describe('parse()', () => {
   it('should fetch simple elements', () => {
@@ -8,8 +8,8 @@ describe('parse()', () => {
     parse(
       '<!doctype><html lang="en"><body>123<a id="hello" href="/">Hey</a>456</body></html>',
       (context) => {
-        context.onElement('body a', (linkContext, tag) => {
-          href = tag.attrs.href;
+        context.onElement('body a', (linkContext, element) => {
+          href = element.attrs.href;
           linkContext.onText((v) => text += v);
         });
       }
@@ -18,24 +18,25 @@ describe('parse()', () => {
     expect(text).to.equal('Hey');
   });
 
-  it('should ', () => {
-    var resultHref = null;
-    var resultText = '';
+  it('should support complicated selectors', () => {
+    var href = null;
+    var text = '';
     parse(
-      '<!doctype><html lang="en"><body><a id="hello" href="http://example.com">Hello <span>World</span></a></body></html>',
-      (context) => {
-        context.onElement('#hello', (linkContext, linkElement) => {
-          resultHref = linkElement.attrs.href;
-          linkContext.onElement('span', (spanContext, spanElement) => {
-            spanContext.onText((textFragment) => resultText += textFragment);
+        '<!doctype><html lang="en"><body>123<a class="cls1 cls2 cls3" id="hello" href="/">Hey</a>456</body></html>',
+        (context) => {
+          context.onElement('body > a#hello.cls1.cls2', (linkContext, element) => {
+            href = element.attrs.href;
+            linkContext.onText((v) => text += v);
           });
-        });
-      }
+          context.onElement('body > a#hello.cls4', (linkContext, element) => {
+            linkContext.onText((v) => text += v);
+          });
+        }
     );
-
-    console.log(resultHref); // http://example.com
-    console.log(resultText); // World
+    expect(href).to.equal('/');
+    expect(text).to.equal('Hey');
   });
+
 
   it('should fetch multiple elements', () => {
     var text = '';
