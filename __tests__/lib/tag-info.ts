@@ -1,4 +1,3 @@
-import {expect} from 'chai';
 import {SAElement, selectorMatches as originalSelectorMatches} from '../../src/tag-info';
 import {FlatSelector} from '../../src/parser';
 
@@ -32,7 +31,7 @@ describe('tag-info', () => {
                         {tagName: 'div'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match multi-selector', () => {
@@ -46,7 +45,7 @@ describe('tag-info', () => {
                         [{tagName: 'span'}]
                     ]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match star', () => {
@@ -58,7 +57,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div'}, {tagName: 'span'}]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match a single class', () => {
@@ -69,7 +68,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div', classNames: ['cls1']}]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match multiple classes', () => {
@@ -80,7 +79,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div', classNames: ['cls1', 'cls2']}]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should not match non-existent class', () => {
@@ -91,7 +90,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div', classNames: ['cls2']}]]
                 )
-            ).to.equal(false);
+            ).toEqual(false);
         });
 
         it('should not match partially non-existent class', () => {
@@ -102,7 +101,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div', classNames: ['cls1', 'cls3']}]]
                 )
-            ).to.equal(false);
+            ).toEqual(false);
         });
 
         it('should not match non-existing star', () => {
@@ -114,7 +113,7 @@ describe('tag-info', () => {
                     ],
                     [[{tagName: 'div'}, {}]]
                 )
-            ).to.equal(false);
+            ).toEqual(false);
         });
 
         it('should match two level cases', () => {
@@ -129,7 +128,7 @@ describe('tag-info', () => {
                         {tagName: 'div'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match over a level', () => {
@@ -145,7 +144,7 @@ describe('tag-info', () => {
                         {tagName: 'div'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match over two levels', () => {
@@ -164,7 +163,7 @@ describe('tag-info', () => {
                         {tagName: 'div'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should not match if parent wasn\'t found', () => {
@@ -179,7 +178,7 @@ describe('tag-info', () => {
                         {tagName: 'div'}
                     ]]
                 )
-            ).to.equal(false);
+            ).toEqual(false);
         });
 
         it('should match with direct parent', () => {
@@ -194,7 +193,7 @@ describe('tag-info', () => {
                         {tagName: 'div', nestingOperator: '>'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should match with mixed nesting', () => {
@@ -212,7 +211,7 @@ describe('tag-info', () => {
                         {tagName: 'div', nestingOperator: '>'}
                     ]]
                 )
-            ).to.equal(true);
+            ).toEqual(true);
         });
 
         it('should not match with indirect parent', () => {
@@ -228,7 +227,7 @@ describe('tag-info', () => {
                         {tagName: 'div', nestingOperator: '>'}
                     ]]
                 )
-            ).to.equal(false);
+            ).toEqual(false);
         });
 
         describe('attributes', () => {
@@ -239,7 +238,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {disabled: undefined}}],
                             [[{tagName: 'div', attrs: [{name: 'disabled'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -247,7 +246,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: '/'}}],
                             [[{tagName: 'div', attrs: [{name: 'rel'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
             describe('=', () => {
@@ -257,7 +256,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: '/'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '=', value: '/'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -265,7 +264,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: '/'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '=', value: '#'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
 
@@ -276,7 +275,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '^=', value: 'ab'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -284,7 +283,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '^=', value: 'bc'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
 
@@ -295,7 +294,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '$=', value: 'bc'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -303,7 +302,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '$=', value: 'ab'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
 
@@ -314,7 +313,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '*=', value: 'b'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -322,7 +321,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '*=', value: 'bb'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
 
@@ -333,7 +332,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc def'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '~=', value: 'abc'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -341,7 +340,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc def'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '~=', value: 'c d'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
 
@@ -352,7 +351,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '|=', value: 'abc'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should match as prefix', () => {
                     expect(
@@ -360,7 +359,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc-def'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '|=', value: 'abc'}]}]]
                         )
-                    ).to.equal(true);
+                    ).toEqual(true);
                 });
                 it('should not match', () => {
                     expect(
@@ -368,7 +367,7 @@ describe('tag-info', () => {
                             [{tagName: 'div', attrs: {href: 'abc def'}}],
                             [[{tagName: 'div', attrs: [{name: 'href', operator: '|=', value: 'abc'}]}]]
                         )
-                    ).to.equal(false);
+                    ).toEqual(false);
                 });
             });
         });

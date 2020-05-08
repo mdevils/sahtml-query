@@ -23,10 +23,18 @@ interface SubContext {
     callback: (...args: any[]) => void;
 }
 
+export type ConsumeEventType = 'tagOpen' | 'tagClose' | 'text';
+
 export class SAContext {
-    protected subscriptions: {[id: string]: Subscription} = {};
-    protected subContexts: {[id: string]: SubContext} = {};
-    protected afterCallback = null as null | (() => void);
+    protected subscriptions: {[id: string]: Subscription};
+    protected subContexts: {[id: string]: SubContext};
+    protected afterCallback: null | (() => void);
+
+    constructor() {
+        this.subscriptions = {};
+        this.subContexts = {};
+        this.afterCallback = null;
+    }
 
     public onText(callback: OnTextCallback) {
         const newId = generateId();
@@ -64,7 +72,7 @@ export class SAContext {
         };
     };
 
-    protected consume(type: string, data: string | SAElement, stack: SAElement[]) {
+    protected consume(type: ConsumeEventType, data: string | SAElement, stack: SAElement[]) {
         this.emit(type, data, stack);
         const subContextKeys = Object.keys(this.subContexts);
         let subContext: SubContext;

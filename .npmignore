@@ -1,4 +1,5 @@
-test
+__tests__
 src
 .travis.yml
 tsconfig.json
+babel.config.js

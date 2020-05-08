@@ -1,4 +1,4 @@
-import {SAContext} from './sa-context';
+import {ConsumeEventType, SAContext} from './sa-context';
 import {SAElement} from './tag-info';
 
 export class FragmentContext extends SAContext {
@@ -11,7 +11,7 @@ export class FragmentContext extends SAContext {
         this.stackLength = stack.length;
     }
 
-    protected consume(type: string, data: SAElement | string, stack: SAElement[]) {
+    protected consume(type: ConsumeEventType, data: SAElement | string, stack: SAElement[]) {
         super.consume(type, data, stack);
         if (type === 'tagClose' && stack.length < this.stackLength) {
             this.unsubscribe();

@@ -1,4 +1,3 @@
-import {expect} from 'chai';
 import {parse} from '../src';
 
 describe('parse()', () => {
@@ -14,8 +13,8 @@ describe('parse()', () => {
         });
       }
     );
-    expect(href).to.equal('/');
-    expect(text).to.equal('Hey');
+    expect(href).toEqual('/');
+    expect(text).toEqual('Hey');
   });
 
   it('should support complicated selectors', () => {
@@ -33,8 +32,8 @@ describe('parse()', () => {
           });
         }
     );
-    expect(href).to.equal('/');
-    expect(text).to.equal('Hey');
+    expect(href).toEqual('/');
+    expect(text).toEqual('Hey');
   });
 
 
@@ -48,7 +47,7 @@ describe('parse()', () => {
         });
       }
     );
-    expect(text).to.equal('Hello World');
+    expect(text).toEqual('Hello World');
   });
 
   it('should collect nested text', () => {
@@ -61,7 +60,7 @@ describe('parse()', () => {
         });
       }
     );
-    expect(text).to.equal('(Hello World)');
+    expect(text).toEqual('(Hello World)');
   });
 
   it('should handle nested context', () => {
@@ -78,7 +77,7 @@ describe('parse()', () => {
         });
       }
     );
-    expect(text).to.equal('12');
-    expect(attrs).to.equal('34');
+    expect(text).toEqual('12');
+    expect(attrs).toEqual('34');
   });
 });
