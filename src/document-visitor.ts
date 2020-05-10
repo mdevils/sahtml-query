@@ -1,6 +1,6 @@
 import {Entity, SAHtml} from 'sahtml';
-import {SAContext} from './sa-context';
-import {FragmentContext} from './fragment-context';
+import {Visitor} from './visitor';
+import {FragmentVisitor} from './fragment-visitor';
 import {SAElement} from './tag-info';
 import {tagPlacings} from './tag-placing';
 
@@ -20,11 +20,11 @@ const noContentElements: {[key: string]: true} = {
     meta: true
 };
 
-export class DocumentContext extends SAContext {
+export class DocumentVisitor extends Visitor {
     protected parser: SAHtml;
 
     constructor(html: string) {
-        super();
+        super([]);
         this.parser = new SAHtml(html);
     }
 
@@ -168,7 +168,7 @@ export class DocumentContext extends SAContext {
         }
     }
 
-    protected createSubContext(stack: SAElement[]): SAContext {
-        return new FragmentContext(this, stack);
+    protected createSubContext(stack: SAElement[]): Visitor {
+        return new FragmentVisitor(this, stack);
     }
 }

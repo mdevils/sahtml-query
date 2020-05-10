@@ -1,13 +1,13 @@
 import {parse} from '../../src';
 
 describe('parse()', () => {
-    describe('illegal-elements', () => {
-        it('should omit rows for non-existing tables', () => {
+    describe('textarea-content', () => {
+        it('should handle unclosed elements on root level', () => {
             let result = '';
             parse(
-                '<div><tr><td><span>Hello</span></td><td><span>World</span></td></div>',
+                `<div><textarea>1 <b>2</b> 3 &lt;b&gt;4&lt;/b&gt;</textarea></div>`,
                 ({onElement}) => {
-                    onElement('div > span', ({onText, after}) => {
+                    onElement('div > textarea', ({onText, after}) => {
                         result += '(';
                         onText(({text}) => result += text);
                         after(() => {
@@ -16,7 +16,7 @@ describe('parse()', () => {
                     });
                 }
             );
-            expect(result).toEqual('(Hello)(World)');
+            expect(result).toEqual('(1 <b>2</b> 3 <b>4</b>)');
         });
     });
 });

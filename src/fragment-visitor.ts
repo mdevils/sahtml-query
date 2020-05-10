@@ -1,12 +1,12 @@
-import {ConsumeEventType, SAContext} from './sa-context';
+import {ConsumeEventType, Visitor} from './visitor';
 import {SAElement} from './tag-info';
 
-export class FragmentContext extends SAContext {
+export class FragmentVisitor extends Visitor {
     protected unsubscribe: () => void;
     protected stackLength: number;
 
-    constructor(parentContext: SAContext, stack: SAElement[]) {
-        super();
+    constructor(parentContext: Visitor, stack: SAElement[]) {
+        super(stack);
         this.unsubscribe = (parentContext as any).subscribe(this.consume, this);
         this.stackLength = stack.length;
     }
@@ -19,7 +19,7 @@ export class FragmentContext extends SAContext {
         }
     }
 
-    protected createSubContext(stack: SAElement[]): SAContext {
-        return new FragmentContext(this, stack);
+    protected createSubContext(stack: SAElement[]): Visitor {
+        return new FragmentVisitor(this, stack);
     }
 }

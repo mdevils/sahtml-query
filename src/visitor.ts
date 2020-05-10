@@ -2,14 +2,12 @@ import {SAElement} from './tag-info';
 import {FlatSelector} from './parser';
 import {selectorMatches} from './tag-info';
 import {parseCssSelector} from './parser';
+import {ElementContext, TextContext, OnElementCallback, OnTextCallback} from './context';
 
 const generateId = (() => {
     let lastId = 0;
     return () => 'id' + (lastId++);
 })();
-
-export type OnElementCallback = (context: SAContext, element: SAElement) => void;
-export type OnTextCallback = (text: string) => void;
 
 type SubscriptionCallback = (type: string, data: SAElement | string, stack: SAElement[]) => void;
 
@@ -25,12 +23,14 @@ interface SubContext {
 
 export type ConsumeEventType = 'tagOpen' | 'tagClose' | 'text';
 
-export class SAContext {
+export class Visitor {
     protected subscriptions: {[id: string]: Subscription};
     protected subContexts: {[id: string]: SubContext};
     protected afterCallback: null | (() => void);
+    protected stack: SAElement[];
 
-    constructor() {
+    constructor(stack: SAElement[]) {
+        this.stack = stack;
         this.subscriptions = {};
         this.subContexts = {};
         this.afterCallback = null;
@@ -50,6 +50,10 @@ export class SAContext {
         };
         return this;
     };
+
+    public matches(selector: string) {
+        return selectorMatches(this.stack, parseCssSelector(selector));
+    }
 
     public after(callback: () => void) {
         /**
@@ -84,7 +88,10 @@ export class SAContext {
                 subContext = this.subContexts[subContextKey];
                 const selector = subContext.selector;
                 if (selector && selectorMatches(stack, selector)) {
-                    subContext.callback(this.createSubContext(stack), data);
+                    subContext.callback(new ElementContext(
+                        data as SAElement,
+                        this.createSubContext(stack)
+                    ));
                 }
             }
             return;
@@ -94,14 +101,14 @@ export class SAContext {
                 subContextKey = subContextKeys[i];
                 subContext = this.subContexts[subContextKey];
                 if (!subContext.selector) {
-                    subContext.callback(data);
+                    subContext.callback(new TextContext(data as string, stack));
                 }
             }
         }
     }
 
-    protected createSubContext(_: SAElement[]): SAContext {
-        return new SAContext();
+    protected createSubContext(stack: SAElement[]): Visitor {
+        return new Visitor(stack);
     }
 
     protected emit(type: string, data: SAElement | string, stack: SAElement[]) {

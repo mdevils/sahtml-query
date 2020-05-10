@@ -2,82 +2,82 @@ import {parse} from '../src';
 
 describe('parse()', () => {
   it('should fetch simple elements', () => {
-    var href = null;
-    var text = '';
+    let href = null;
+    let result = '';
     parse(
       '<!doctype><html lang="en"><body>123<a id="hello" href="/">Hey</a>456</body></html>',
-      (context) => {
-        context.onElement('body a', (linkContext, element) => {
+      ({onElement}) => {
+        onElement('body a', ({onText, element}) => {
           href = element.attrs.href;
-          linkContext.onText((v) => text += v);
+          onText(({text}) => result += text);
         });
       }
     );
     expect(href).toEqual('/');
-    expect(text).toEqual('Hey');
+    expect(result).toEqual('Hey');
   });
 
   it('should support complicated selectors', () => {
-    var href = null;
-    var text = '';
+    let resultHref = null;
+    let resultText = '';
     parse(
         '<!doctype><html lang="en"><body>123<a class="cls1 cls2 cls3" id="hello" href="/">Hey</a>456</body></html>',
-        (context) => {
-          context.onElement('body > a#hello.cls1.cls2', (linkContext, element) => {
-            href = element.attrs.href;
-            linkContext.onText((v) => text += v);
+        ({onElement}) => {
+          onElement('body > a#hello.cls1.cls2', ({onText, element: {attrs: {href}}}) => {
+              resultHref = href;
+            onText(({text}) => resultText += text);
           });
-          context.onElement('body > a#hello.cls4', (linkContext, element) => {
-            linkContext.onText((v) => text += v);
+          onElement('body > a#hello.cls4', ({onText}) => {
+            onText(({text}) => resultText += text);
           });
         }
     );
-    expect(href).toEqual('/');
-    expect(text).toEqual('Hey');
+    expect(resultHref).toEqual('/');
+    expect(resultText).toEqual('Hey');
   });
 
 
   it('should fetch multiple elements', () => {
-    var text = '';
+    let result = '';
     parse(
       '<!doctype><html lang="en"><body>(<i>Hello</i><span> </span></span><b>World</b>)</body></html>',
-      (context) => {
-        context.onElement('body > *', (subContext) => {
-          subContext.onText((v) => text += v);
+      ({onElement}) => {
+        onElement('body > *', ({onText}) => {
+          onText(({text}) => result += text);
         });
       }
     );
-    expect(text).toEqual('Hello World');
+    expect(result).toEqual('Hello World');
   });
 
   it('should collect nested text', () => {
-    var text = '';
+    let result = '';
     parse(
       '<!doctype><html lang="en"><body>(<i>Hello</i><span> </span></span><b>World</b>)</body></html>',
-      (context) => {
-        context.onElement('body', (bodyContext) => {
-          bodyContext.onText((v) => text += v);
+      ({onElement}) => {
+        onElement('body', ({onText}) => {
+          onText(({text}) => result += text);
         });
       }
     );
-    expect(text).toEqual('(Hello World)');
+    expect(result).toEqual('(Hello World)');
   });
 
   it('should handle nested context', () => {
-    var text = '';
-    var attrs = '';
+    let resultText = '';
+    let resultAttrs = '';
     parse(
       '<!doctype><html lang="en"><body><b><i accesskey="3">1</i></b><b><i accesskey="4">2</i></b></body></html>',
       (context) => {
-        context.onElement('body', (bContext) => {
-          bContext.onElement('i', (iContext, {attrs: {accesskey}}) => {
-            attrs += accesskey;
-            iContext.onText((v) => text += v);
+        context.onElement('body', ({onElement}) => {
+          onElement('i', ({onText, element: {attrs: {accesskey}}}) => {
+            resultAttrs += accesskey;
+            onText(({text}) => resultText += text);
           });
         });
       }
     );
-    expect(text).toEqual('12');
-    expect(attrs).toEqual('34');
+    expect(resultText).toEqual('12');
+    expect(resultAttrs).toEqual('34');
   });
 });

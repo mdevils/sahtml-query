@@ -3,20 +3,20 @@ import {parse} from '../../src';
 describe('parse()', () => {
     describe('unclosed-elements', () => {
         it('should handle unclosed elements on root level', () => {
-            var text = '';
+            let result = '';
             parse(
                 '<html><body>Hello',
                 (context) => {
                     context.onElement('html > body', (liContext) => {
-                        text += '(';
-                        liContext.onText((v) => text += v);
+                        result += '(';
+                        liContext.onText(({text}) => result += text);
                         liContext.after(() => {
-                            text += ')';
+                            result += ')';
                         });
                     });
                 }
             );
-            expect(text).toEqual('(Hello)');
+            expect(result).toEqual('(Hello)');
         });
     });
 });
