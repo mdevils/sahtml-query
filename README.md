@@ -1,4 +1,4 @@
-sahtml-query
+# sahtml-query [![GitHub Actions Status](https://github.com/mdevils/sahtml-query/workflows/test/badge.svg?branch=master)](https://github.com/mdevils/sahtml-query/actions)
 ============
 
 Fast and low memory query API for HTML (node.js).
